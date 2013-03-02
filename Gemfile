@@ -4,10 +4,12 @@ source 'https://rubygems.org'
 gemspec
 
 group :development do
+  gem 'sqlite3'
   gem 'shotgun'
   gem 'rspec'
   gem 'guard-rspec'
   gem 'rb-fsevent', '~> 0.9'
+  gem 'rb-readline'
 end
 
 group :evaluations do

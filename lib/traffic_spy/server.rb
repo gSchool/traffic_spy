@@ -1,20 +1,39 @@
 module TrafficSpy
 
-  # Sinatra::Base - Middleware, Libraries, and Modular Apps
-  #
-  # Defining your app at the top-level works well for micro-apps but has
-  # considerable drawbacks when building reusable components such as Rack
-  # middleware, Rails metal, simple libraries with a server component, or even
-  # Sinatra extensions. The top-level DSL pollutes the Object namespace and
-  # assumes a micro-app style configuration (e.g., a single application file,
-  # ./public and ./views directories, logging, exception detail page, etc.).
-  # That's where Sinatra::Base comes into play:
-  #
   class Server < Sinatra::Base
     set :views, 'lib/views'
 
+
     get '/' do
       erb :index
+    end
+
+    get '/sources/new' do
+      erb 'sources/new'.to_sym
+    end
+
+    get '/sources/:identifier' do
+      @source = Source.find_by_identifier(params[:identifier])
+      erb 'sources/show'.to_sym
+    end
+
+    post '/sources' do
+      clean_hash = { :identifier => params[:identifier],
+                     :root_url   => params[:rootUrl]
+                   }
+      source = Source.new(clean_hash)
+
+      if source.exists?
+        status 403
+        body "Identifier already exists."
+      elsif source.valid?
+        source.save
+        status 200
+        body "{\"identifier\":\"#{source.identifier}\"}"
+      else
+        status 400
+        body "Missing required parameters."
+      end
     end
 
     not_found do
