@@ -20,6 +20,18 @@ module TrafficSpy
     not_found do
       erb :error
     end
-  end
 
+    post '/sources' do
+      if params.key?('identifier') && params.key?('rootUrl')
+        status 200
+        identifier = params[:identifier]
+        rootUrl = params[:rootUrl]
+        # create table identifier(id)
+      elsif !params.key?('identifier') || !params.key?('rootUrl')
+        status 400
+      else
+        status 403
+      end
+    end
+  end
 end

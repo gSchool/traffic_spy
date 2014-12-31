@@ -6,3 +6,5 @@ Bundler.require
 
 require 'traffic_spy'
 run TrafficSpy::Server
+
+puts current_path
